@@ -15,13 +15,7 @@ export default function resolveDocumentActions(props: {
     ...defaultResolve(props).filter((Action) => {
       return !(
         [DeleteAction, UnpublishAction, DuplicateAction].includes(Action) &&
-        [
-          "homePageDocumentId",
-          "aboutMePageDocumentId",
-          "siteConfigurationDocumentId",
-          "newsletterIntegrationDocumentId",
-          "affiliateCodesIntegrationDocumentId",
-        ].includes(props.id)
+        ["homePage", "aboutPage", "siteConfiguration"].includes(props.id)
       );
     }),
   ];

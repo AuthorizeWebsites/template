@@ -191,7 +191,7 @@ export function Header({ siteConfiguration }: { siteConfiguration: any }) {
           <a
             className={`${
               router?.asPath === "/" ? "text-shadow-teal" : ""
-            } text-3xl font-light leading-none tracking-wider text-transparent uppercase transition-all duration-300 ease-in-out hover:text-shadow-teal-lg bg-clip-text bg-gradient-to-tr from-teal-500 to-teal-400`}
+            } text-3xl focus:text-shadow-teal-lg focus:outline-none font-light leading-none tracking-wider text-transparent uppercase transition-all duration-300 ease-in-out hover:text-shadow-teal-lg bg-clip-text bg-gradient-to-tr from-teal-500 to-teal-400`}
           >
             {siteConfiguration.authorName ?? ""}
           </a>
@@ -206,7 +206,7 @@ export function Header({ siteConfiguration }: { siteConfiguration: any }) {
                     router?.asPath === (as ?? href)
                       ? "text-transparent bg-clip-text bg-gradient-to-tr from-teal-500 to-teal-400 text-shadow-teal"
                       : "text-gray-600 hover:text-gray-800"
-                  } text-lg font-light tracking-wider`}
+                  } text-lg font-light tracking-wider focus:text-shadow-teal-lg focus:outline-none`}
                 >
                   {text}
                 </a>

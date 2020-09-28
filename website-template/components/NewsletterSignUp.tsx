@@ -79,7 +79,7 @@ export function NewsletterSignUp({
                 });
               }
             }}
-            className="px-3 py-2 font-semibold leading-none tracking-wider text-white transform rounded-md shadow-lg focus:outline-none bg-gradient-to-tr from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
+            className="px-3 py-2 font-semibold leading-none tracking-wider text-white transform rounded-md shadow-lg focus:from-teal-600 focus:to-teal-700 focus:outline-none bg-gradient-to-tr from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
           >
             Submit
           </button>
@@ -87,7 +87,9 @@ export function NewsletterSignUp({
         <p className="text-xs leading-tight tracking-wider text-gray-400">
           We care about the protection of your data. Read our{" "}
           <Link href="/privacy-policy">
-            <a className="underline">Privacy Policy</a>
+            <a className="underline focus:outline-none focus:text-shadow-teal">
+              Privacy Policy
+            </a>
           </Link>
           .
         </p>

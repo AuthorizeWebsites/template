@@ -8,11 +8,21 @@ import { BuyLinksBar } from "../../components/BuyLinksBar";
 import { RecommendationsBar } from "../../components/RecommendationsBar";
 import { BookSet } from "../../components/BookSet";
 import { ParentLinkBar } from "../../components/ParentLinkBar";
+import { useRouter } from "next/router";
 
 export default function SeriesIdPage(props: {
   siteConfiguration: any;
   series: any;
 }) {
+  const router = useRouter();
+
+  if (router.isFallback)
+    return (
+      <div className="flex items-center justify-center w-screen h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+
   return (
     <Layout
       header={<Header siteConfiguration={props.siteConfiguration} />}
@@ -145,6 +155,7 @@ export const getStaticProps = async ({ params: { id } }) => {
         `)
       ).result,
     },
+    revalidate: 1,
   };
 };
 
@@ -157,6 +168,6 @@ export const getStaticPaths = async () => {
         ] . _id
       `)
     ).result.map((_id: string) => ({ params: { id: _id } })),
-    fallback: false,
+    fallback: true,
   };
 };

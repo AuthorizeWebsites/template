@@ -7,7 +7,7 @@ export function Footer({ siteConfiguration }: { siteConfiguration: any }) {
           href="https://stevenpressfield.com"
           target="_blank"
           rel="noopener"
-          className="text-transparent bg-gradient-to-tr bg-clip-text from-teal-500 to-teal-400"
+          className="text-transparent bg-gradient-to-tr bg-clip-text from-teal-500 to-teal-400 focus:outline-none focus:text-shadow-teal"
         >
           {siteConfiguration.authorName}
         </a>{" "}
@@ -16,7 +16,7 @@ export function Footer({ siteConfiguration }: { siteConfiguration: any }) {
           href="https://authorizewebsites.com"
           target="_blank"
           rel="noopener"
-          className="text-transparent bg-gradient-to-tr bg-clip-text from-teal-500 to-teal-400"
+          className="text-transparent bg-gradient-to-tr bg-clip-text from-teal-500 to-teal-400 focus:outline-none focus:text-shadow-teal"
         >
           Authorize
         </a>

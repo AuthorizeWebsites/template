@@ -78,7 +78,7 @@ export function Image(props: ImageProps) {
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <h1
-          className="text-2xl font-light leading-tight tracking-wider"
+          className="p-4 text-2xl font-light leading-tight tracking-wider text-center"
           style={{
             color: chosenColorPair.foreground,
           }}

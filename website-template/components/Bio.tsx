@@ -13,7 +13,7 @@ export function Bio({ content }: { content: any[] }) {
         className="prose max-w-none"
       />
       <Link href="/about">
-        <a className="self-start px-3 py-2 text-lg font-semibold tracking-wider text-white rounded-md shadow-lg hover:from-teal-500 hover:to-teal-600 bg-gradient-to-tr from-teal-400 to-teal-500">
+        <a className="self-start px-3 py-2 text-lg font-semibold tracking-wider text-white rounded-md shadow-lg focus:outline-none focus:from-teal-500 focus:to-teal-600 hover:from-teal-500 hover:to-teal-600 bg-gradient-to-tr from-teal-400 to-teal-500">
           Read More
         </a>
       </Link>

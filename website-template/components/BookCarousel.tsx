@@ -51,7 +51,7 @@ export function BookCarousel({ books }: { books: any[] }) {
           className="absolute inset-0 px-4 pt-4 pb-6"
         >
           <Link href="/book/[id]" as={`/book/${book._id}`}>
-            <a className="flex items-center justify-center w-full h-full gap-4 p-4 bg-white rounded-md shadow-lg">
+            <a className="flex items-center justify-center w-full h-full gap-4 p-4 bg-white rounded-md shadow-lg focus:outline-none focus:opacity-75">
               <div className="relative overflow-hidden rounded-md shadow-lg w-72">
                 <Image {...book.cover.asset} />
               </div>
@@ -92,7 +92,7 @@ export function BookCarousel({ books }: { books: any[] }) {
             onClick={() => setShowingIndex(index)}
             className={`${
               showingIndex === index ? "bg-teal-400" : "bg-white"
-            } w-2 h-2 rounded-full focus:outline-none transform hover:scale-125`}
+            } w-2 h-2 rounded-full focus:outline-none border border-transparent focus:border-teal-400 transform hover:scale-125`}
           />
         ))}
       </div>

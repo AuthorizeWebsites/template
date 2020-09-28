@@ -25,10 +25,6 @@
       "path": "./deskStructure.tsx"
     },
     {
-      "name": "part:@sanity/base/initial-value-templates",
-      "path": "./initialValueTemplates.ts"
-    },
-    {
       "implements": "part:@sanity/base/document-actions/resolver",
       "path": "resolveDocumentActions.ts"
     }

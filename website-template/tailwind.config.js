@@ -35,6 +35,7 @@ module.exports = {
     display: ["responsive", "hover", "focus", "group-hover"],
     boxShadow: ["responsive", "hover", "focus", "group-hover"],
     scale: ["responsive", "hover", "focus", "group-hover"],
+    textShadow: ["responsive", "hover", "focus"],
   },
   plugins: [
     require("tailwindcss-filters"),

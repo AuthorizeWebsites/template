@@ -179,7 +179,7 @@ const BooksPage = function BooksPage({
 export default BooksPage;
 
 export const getStaticProps = async () => {
-  const props = {
+  return {
     siteConfiguration: (
       await execQuery(groq`
         * | [
@@ -290,8 +290,6 @@ export const getStaticProps = async () => {
         }
       `)
     ).result,
-  };
-  return {
-    props,
+    revalidate: 1,
   };
 };

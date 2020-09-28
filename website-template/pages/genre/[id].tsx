@@ -5,6 +5,7 @@ import { execQuery, groq } from "../../queries";
 import { BookSet } from "../../components/BookSet";
 import { Series } from "../../components/Series";
 import { Universe } from "../../components/Universe";
+import { useRouter } from "next/router";
 
 export default function GenreIdPage(props: {
   siteConfiguration: any;
@@ -13,6 +14,15 @@ export default function GenreIdPage(props: {
   books: any[];
   genre: { _id: string; name: string };
 }) {
+  const router = useRouter();
+
+  if (router.isFallback)
+    return (
+      <div className="flex items-center justify-center w-screen h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+
   return (
     <Layout
       header={<Header siteConfiguration={props.siteConfiguration} />}
@@ -173,6 +183,7 @@ export const getStaticProps = async ({ params: { id } }) => {
         `)
       ).result,
     },
+    revalidate: 1,
   };
 };
 
@@ -185,6 +196,6 @@ export const getStaticPaths = async () => {
         ] . _id
       `)
     ).result.map((_id: string) => ({ params: { id: _id } })),
-    fallback: false,
+    fallback: true,
   };
 };
