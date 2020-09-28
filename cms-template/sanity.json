@@ -1,0 +1,36 @@
+{
+  "root": true,
+  "project": {
+    "name": "Authorize CMS"
+  },
+  "api": {
+    "projectId": "whlu07sm",
+    "dataset": "development"
+  },
+  "plugins": [
+    "@sanity/base",
+    "@sanity/components",
+    "@sanity/default-layout",
+    "@sanity/default-login",
+    "@sanity/desk-tool",
+    "@sanity/vision"
+  ],
+  "parts": [
+    {
+      "name": "part:@sanity/base/schema",
+      "path": "./schemas/schema"
+    },
+    {
+      "name": "part:@sanity/desk-tool/structure",
+      "path": "./deskStructure.tsx"
+    },
+    {
+      "name": "part:@sanity/base/initial-value-templates",
+      "path": "./initialValueTemplates.ts"
+    },
+    {
+      "implements": "part:@sanity/base/document-actions/resolver",
+      "path": "resolveDocumentActions.ts"
+    }
+  ]
+}

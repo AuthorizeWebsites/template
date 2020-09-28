@@ -1,0 +1,24 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import { execQuery, groq } from "../../queries";
+
+export default async function Handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  res.json(
+    (
+      await execQuery(groq`
+        * | [
+            _type in ["book", "series", "universe", "genre"]
+        ] | [
+            [name, title, tagline] match [${(req.query.str as string)
+              ?.split(" ")
+              ?.map((term: string) => `"*${term}*"`)
+              ?.join(", ")}]
+        ] | [
+            0 .. 7
+        ]
+    `)
+    ).result
+  );
+}
