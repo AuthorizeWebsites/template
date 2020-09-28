@@ -24,7 +24,6 @@ export interface BookProps {
 
 export function Book(props: BookProps) {
   const [hovered, setHovered] = useState(false);
-  const [_, setModal] = useContext(ModalContext);
 
   return (
     <div
@@ -95,11 +94,11 @@ interface BuyNowButtonProps {
 }
 
 function BuyNowButton({ buyLinks }: BuyNowButtonProps) {
-  const [_, setModal] = useContext(ModalContext);
+  const { updateModal } = useContext(ModalContext);
 
   return (
     <button
-      onClick={() => setModal(<BuyNowModal buyLinks={buyLinks} />)}
+      onClick={() => updateModal(<BuyNowModal buyLinks={buyLinks} />)}
       style={{
         willChange: "transform",
       }}
@@ -111,13 +110,16 @@ function BuyNowButton({ buyLinks }: BuyNowButtonProps) {
 }
 
 function BuyNowModal({ buyLinks }: BuyNowButtonProps) {
-  const [_, setModal] = useContext(ModalContext);
+  const { updateModal } = useContext(ModalContext);
 
   return (
     <div className="absolute inset-0 flex items-center justify-center px-2">
       <div className="relative z-50 flex flex-col w-full max-w-md overflow-hidden bg-white divide-y rounded-md shadow-2xl">
         <div className="flex justify-end p-4">
-          <button onClick={() => setModal(null)} className="focus:outline-none">
+          <button
+            onClick={() => updateModal(null)}
+            className="focus:outline-none"
+          >
             <svg
               className="w-6 h-6"
               fill="none"

@@ -10,6 +10,7 @@
     "@headlessui/react": "^0.1.1",
     "@mailchimp/mailchimp_marketing": "^3.0.19",
     "@sanity/block-content-to-react": "^2.0.7",
+    "@sendgrid/mail": "^7.2.6",
     "@tailwindcss/typography": "^0.2.0",
     "@tailwindcss/ui": "^0.6.2",
     "flex-gap-polyfill": "^1.0.3",

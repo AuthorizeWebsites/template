@@ -11,9 +11,9 @@ export function NewsletterSignUp({
   primaryText,
   secondaryText,
 }: NewsletterSignUpProps) {
+  const { updateModal } = useContext(ModalContext);
   const [email, setEmail] = useState("");
   const [disabled, setDisabled] = useState(false);
-  const [_, setModal] = useContext(ModalContext);
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 p-4 bg-gray-900 rounded-md shadow-lg lg:flex-row sm:p-16">
@@ -39,7 +39,7 @@ export function NewsletterSignUp({
             disabled={disabled}
             onClick={() => {
               if (!email.includes("@"))
-                setModal(
+                updateModal(
                   <SignUpErrorModal content="You must give a valid email address." />
                 );
               else {
@@ -57,7 +57,7 @@ export function NewsletterSignUp({
                     const err = await r.json();
                     switch (err.title) {
                       case "Member Exists":
-                        setModal(
+                        updateModal(
                           <SignUpErrorModal
                             onExit={() => setDisabled(false)}
                             content="Someone has already signed up with that email address. Please try another."
@@ -65,7 +65,7 @@ export function NewsletterSignUp({
                         );
                         break;
                       default:
-                        setModal(
+                        updateModal(
                           <SignUpErrorModal
                             onExit={() => setDisabled(false)}
                             content="Something went wrong. Try again in a moment, and if the problem persists, please contact website support at support@authorizewebsites.com"
@@ -73,7 +73,7 @@ export function NewsletterSignUp({
                         );
                     }
                   } else
-                    setModal(
+                    updateModal(
                       <SignUpCompleteModal onExit={() => setDisabled(false)} />
                     );
                 });
@@ -99,7 +99,7 @@ export function NewsletterSignUp({
 }
 
 function SignUpCompleteModal({ onExit }: { onExit?: () => void }) {
-  const [_, setModal] = useContext(ModalContext);
+  const { updateModal } = useContext(ModalContext);
 
   return (
     <div className="absolute inset-0 flex items-center justify-center px-2">
@@ -108,7 +108,7 @@ function SignUpCompleteModal({ onExit }: { onExit?: () => void }) {
           <button
             onClick={() => {
               onExit?.();
-              setModal(null);
+              updateModal(null);
             }}
             className="focus:outline-none"
           >
@@ -143,7 +143,7 @@ function SignUpErrorModal({
   content: string;
   onExit?: () => void;
 }) {
-  const [_, setModal] = useContext(ModalContext);
+  const { updateModal } = useContext(ModalContext);
 
   return (
     <div className="absolute inset-0 flex items-center justify-center px-2">
@@ -152,7 +152,7 @@ function SignUpErrorModal({
           <button
             onClick={() => {
               onExit?.();
-              setModal(null);
+              updateModal(null);
             }}
             className="focus:outline-none"
           >
