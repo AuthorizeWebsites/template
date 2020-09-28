@@ -175,15 +175,18 @@ export function Header({ siteConfiguration }: { siteConfiguration: any }) {
   const [scrollPos, setScrollPos] = useState(0);
 
   useEffect(() => {
-    window.onscroll = () => {
-      setScrollPos(window.pageYOffset);
-    };
+    window.addEventListener("scroll", () => {
+      if (window.pageYOffset !== 0) {
+        setScrollPos(window.pageYOffset);
+        window.removeEventListener("scroll", this);
+      }
+    });
   }, []);
 
   return (
     <div
       className={`${
-        scrollPos === 0 ? "shadow-none" : "shadow-xl"
+        scrollPos === 0 ? "shadow-none" : "shadow-2xl"
       } p-3 bg-white sm:p-6 transition-all ease-in-out duration-1000`}
     >
       <div className="flex items-center justify-between mx-auto space-x-4 max-w-7xl">

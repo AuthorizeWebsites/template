@@ -26,7 +26,7 @@ export default function ContactPage({
               className="form-textarea h-80"
               placeholder="Your message"
             />
-            <button className="px-4 py-2 text-2xl font-semibold text-white transition-all duration-150 ease-in-out rounded-md bg-gradient-to-tr from-teal-500 to-teal-400 hover:shadow-lg hover:from-teal-600 hover:to-teal-500">
+            <button className="px-4 py-2 text-2xl font-semibold text-white transition-all duration-150 ease-in-out rounded-md focus:outline-none bg-gradient-to-tr from-teal-500 to-teal-400 hover:shadow-lg focus:from-teal-600 focus:to-teal-500 hover:from-teal-600 hover:to-teal-500">
               Send
             </button>
           </div>
