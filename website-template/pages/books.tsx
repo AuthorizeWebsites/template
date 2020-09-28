@@ -180,24 +180,25 @@ export default BooksPage;
 
 export const getStaticProps = async () => {
   return {
-    siteConfiguration: (
-      await execQuery(groq`
+    props: {
+      siteConfiguration: (
+        await execQuery(groq`
         * | [
           _id == "siteConfiguration"
         ] | [
           0
         ]
       `)
-    ).result,
-    genres: (
-      await execQuery(groq`
+      ).result,
+      genres: (
+        await execQuery(groq`
         * | [
           _type == "genre"
         ]
       `)
-    ).result,
-    universes: (
-      await execQuery(groq`
+      ).result,
+      universes: (
+        await execQuery(groq`
         * | [
           _type == "universe"
         ] | {
@@ -233,9 +234,9 @@ export const getStaticProps = async () => {
           ],
         }
       `)
-    ).result,
-    series: (
-      await execQuery(groq`
+      ).result,
+      series: (
+        await execQuery(groq`
         * | [
           _type == "series"
         ] | [
@@ -261,9 +262,9 @@ export const getStaticProps = async () => {
           ],
         }
       `)
-    ).result,
-    books: (
-      await execQuery(groq`
+      ).result,
+      books: (
+        await execQuery(groq`
         * | [
           _type == "book"
         ] | [
@@ -289,7 +290,8 @@ export const getStaticProps = async () => {
           ],
         }
       `)
-    ).result,
+      ).result,
+    },
     revalidate: 1,
   };
 };
