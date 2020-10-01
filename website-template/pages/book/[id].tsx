@@ -224,18 +224,10 @@ export const getStaticProps: GetStaticProps<
 };
 
 export const getStaticPaths = async () => {
-  try {
-    return {
-      paths: (
-        await execQuery<string[]>(groq`*[_type == "book"]._id`)
-      ).map((id: string) => ({ params: { id } })),
-      fallback: true,
-    };
-  } catch (err) {
-    console.error(err);
-    return {
-      paths: [],
-      fallback: true,
-    };
-  }
+  return {
+    paths: (
+      await execQuery<string[]>(groq`*[_type == "book"]._id`)
+    ).map((id: string) => ({ params: { id } })),
+    fallback: true,
+  };
 };

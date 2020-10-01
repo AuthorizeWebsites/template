@@ -132,13 +132,6 @@ export const getStaticProps: GetStaticProps<
   },
   { id: string }
 > = async ({ params }) => {
-  console.info("IN UNIVERSE getStaticProps");
-
-  console.info(
-    "query result",
-    await execQuery<string[]>(groq`*[_type == "universe"]._id`)
-  );
-
   if (params?.id === undefined) throw new Error("Missing id.");
 
   if ((await execQuery<unknown[]>(groq`*[_id == "${params.id}"]`)).length === 0)
@@ -185,25 +178,10 @@ export const getStaticProps: GetStaticProps<
 };
 
 export const getStaticPaths = async () => {
-  console.info("IN UNIVERSE getStaticPaths");
-
-  console.info(
-    "query result",
-    await execQuery<string[]>(groq`*[_type == "universe"]._id`)
-  );
-
-  try {
-    return {
-      paths: (
-        await execQuery<string[]>(groq`*[_type == "universe"]._id`)
-      ).map((_id: string) => ({ params: { id: _id } })),
-      fallback: true,
-    };
-  } catch (err) {
-    console.error(err);
-    return {
-      paths: [],
-      fallback: true,
-    };
-  }
+  return {
+    paths: (
+      await execQuery<string[]>(groq`*[_type == "universe"]._id`)
+    ).map((_id: string) => ({ params: { id: _id } })),
+    fallback: true,
+  };
 };
