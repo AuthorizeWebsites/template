@@ -4,7 +4,7 @@ export const groq = String.raw;
 
 export async function execQuery<T>(query: string): Promise<T> {
   return await fetch(
-    `https://${process.env.SANITY_PROJECT_ID}.apicdn.sanity.io/v1/data/query/${
+    `https://${process.env.SANITY_PROJECT_ID}.api.sanity.io/v1/data/query/${
       process.env.SANITY_DATASET_NAME
     }?query=${encodeURIComponent(query)}`
   )
