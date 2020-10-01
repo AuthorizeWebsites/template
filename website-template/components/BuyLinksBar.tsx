@@ -1,6 +1,8 @@
-export function BuyLinksBar({ buyLinks }: { buyLinks: any[] }) {
+import { BuyLinks } from "../@types/sanity";
+
+export function BuyLinksBar({ buyLinks }: { buyLinks: BuyLinks }) {
   return (
-    <div className="p-8 space-y-4 bg-gray-900 rounded-md shadow-lg">
+    <div className="p-4 space-y-4 bg-gray-900 rounded-md shadow-lg sm:p-8">
       <h1 className="text-2xl font-semibold leading-none tracking-wider text-center text-white uppercase sm:text-4xl sm:text-left">
         Available Here
       </h1>

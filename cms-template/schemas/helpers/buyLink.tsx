@@ -16,7 +16,7 @@ export default {
       type: "url",
     },
   ],
-  icon: (props) => {
+  icon: () => {
     return (
       <svg
         style={{

@@ -3,8 +3,8 @@ import { useContext, useState } from "react";
 import { ModalContext } from "../contexts/modal";
 
 export interface NewsletterSignUpProps {
-  primaryText: string;
-  secondaryText: string;
+  primaryText?: string;
+  secondaryText?: string;
 }
 
 export function NewsletterSignUp({

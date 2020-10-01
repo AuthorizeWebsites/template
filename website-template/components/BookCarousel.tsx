@@ -2,20 +2,19 @@ import { Transition } from "@headlessui/react";
 import BlockContent from "@sanity/block-content-to-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Image } from "./Image";
+import { Book, Carousel, Override } from "../@types/sanity";
+import { ImageV2 } from "./ImageV2";
 
-function useInterval(callback, delay) {
+function useInterval(callback: () => void, delay: number) {
   const savedCallback = useRef(null);
 
-  // Remember the latest callback.
   useEffect(() => {
-    savedCallback.current = callback;
+    (savedCallback as any).current = callback;
   }, [callback]);
 
-  // Set up the interval.
   useEffect(() => {
     function tick() {
-      savedCallback.current();
+      (savedCallback as any).current();
     }
     if (delay !== null) {
       let id = setInterval(tick, delay);
@@ -24,7 +23,9 @@ function useInterval(callback, delay) {
   }, [delay]);
 }
 
-export function BookCarousel({ books }: { books: any[] }) {
+export function BookCarousel({
+  books,
+}: Override<Pick<Carousel, "books">, { books: Book[] }>) {
   const [showingIndex, setShowingIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -52,9 +53,15 @@ export function BookCarousel({ books }: { books: any[] }) {
         >
           <Link href="/book/[id]" as={`/book/${book._id}`}>
             <a className="flex items-center justify-center w-full h-full gap-4 p-4 bg-white rounded-md shadow-lg focus:outline-none focus:opacity-75">
-              <div className="relative overflow-hidden rounded-md shadow-lg w-72">
-                <Image {...book.cover.asset} />
-              </div>
+              {!!book.cover?.asset && (
+                <div className="relative overflow-hidden rounded-md shadow-lg w-72">
+                  <ImageV2
+                    metadata={book.cover.asset.metadata}
+                    url={book.cover.asset.url}
+                    independentDimension="width"
+                  />
+                </div>
+              )}
               <div className="flex-col self-stretch flex-1 hidden sm:flex">
                 <h1 className="text-3xl font-bold leading-tight tracking-wider">
                   {book.title}
@@ -80,9 +87,15 @@ export function BookCarousel({ books }: { books: any[] }) {
           key={book._id + "dummy"}
           className="px-4 pt-4 pb-6 opacity-0 pointer-events-none"
         >
-          <div className="relative overflow-hidden rounded-md shadow-lg w-72">
-            <Image {...book.cover.asset} />
-          </div>
+          {!!book.cover?.asset && (
+            <div className="relative overflow-hidden rounded-md shadow-lg w-72">
+              <ImageV2
+                metadata={book.cover.asset.metadata}
+                url={book.cover.asset.url}
+                independentDimension="width"
+              />
+            </div>
+          )}
         </div>
       ))}
       <div className="absolute inset-x-0 bottom-0 flex justify-center p-2 space-x-2">

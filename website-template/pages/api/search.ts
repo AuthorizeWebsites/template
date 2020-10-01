@@ -1,13 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { execQuery, groq } from "../../queries";
+import { execQuery, groq } from "../../lib/sanity";
 
 export default async function Handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   res.json(
-    (
-      await execQuery(groq`
+    await execQuery<any>(groq`
         * | [
             _type in ["book", "series", "universe", "genre"]
         ] | [
@@ -19,6 +18,5 @@ export default async function Handler(
             0 .. 7
         ]
     `)
-    ).result
   );
 }

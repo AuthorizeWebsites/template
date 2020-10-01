@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import sgMail from "@sendgrid/mail";
 
+if (typeof process.env.SEND_GRID_API_KEY !== "string")
+  throw new Error("Missing SEND_GRID_API_KEY.");
+
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
 export default async function Handler(

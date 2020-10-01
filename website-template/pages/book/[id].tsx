@@ -1,19 +1,29 @@
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { Layout } from "../../components/Layout";
-import { execQuery, groq } from "../../queries";
 import Link from "next/link";
 import BlockContent from "@sanity/block-content-to-react";
 import { BuyLinksBar } from "../../components/BuyLinksBar";
 import { RecommendationsBar } from "../../components/RecommendationsBar";
-import { Image } from "../../components/Image";
 import { ParentLinkBar } from "../../components/ParentLinkBar";
 import { useRouter } from "next/router";
+import { execQuery, getSiteConfiguration, groq } from "../../lib/sanity";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import {
+  Book,
+  Genre,
+  Override,
+  Series,
+  SiteConfiguration,
+  Universe,
+} from "../../@types/sanity";
+import { ImageV2 } from "../../components/ImageV2";
+// import { Book } from "../../@types/pages/book/[id]";
 
-export default function BookIdPage(props: {
-  siteConfiguration: any;
-  book: any;
-}) {
+export default function BookIdPage({
+  siteConfiguration,
+  book,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
 
   if (router.isFallback)
@@ -25,43 +35,54 @@ export default function BookIdPage(props: {
 
   return (
     <Layout
-      header={<Header siteConfiguration={props.siteConfiguration} />}
+      header={
+        <Header authorName={siteConfiguration.authorName ?? "YOUR NAME"} />
+      }
       content={
         <div className="space-y-4">
           <div className="relative flex items-center justify-center px-4 py-12 bg-black sm:py-32">
-            <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black">
-              <img
-                src={props.book.cover.asset.metadata.lqip}
-                height={props.book.cover.asset.metadata.dimensions.height}
-                width={props.book.cover.asset.metadata.dimensions.width}
-                className="min-w-full min-h-full opacity-50 filter-blur"
-                style={{
-                  filter: "brightness(200%) blur(16px)",
-                }}
-              />
-            </div>
-            <div className="relative z-10 flex flex-col items-center justify-center space-y-4">
-              <div className="w-64 overflow-hidden rounded-md shadow-lg">
-                <Image {...props.book.cover.asset} />
+            {!!book.cover?.asset && (
+              <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black">
+                <div
+                  className="absolute inset-0 transform scale-110 opacity-50"
+                  style={{ filter: "blur(32px)" }}
+                >
+                  <ImageV2
+                    metadata={book.cover.asset.metadata}
+                    url={book.cover.asset.url}
+                    independentDimension="cover"
+                  />
+                </div>
               </div>
-              {(!!props.book?.name || !!props.book?.tagline) && (
+            )}
+            <div className="relative z-10 flex flex-col items-center justify-center space-y-4">
+              {!!book.cover?.asset && (
+                <div className="w-64 overflow-hidden rounded-md shadow-lg">
+                  <ImageV2
+                    metadata={book.cover.asset.metadata}
+                    url={book.cover.asset.url}
+                    independentDimension="width"
+                  />
+                </div>
+              )}
+              {(!!book.title || !!book.tagline) && (
                 <div className="max-w-5xl mx-auto">
-                  {!!props.book?.title && (
+                  {!!book.title && (
                     <h1 className="text-3xl font-bold leading-tight tracking-wider text-center text-white">
-                      {props.book.title}
+                      {book.title}
                     </h1>
                   )}
-                  {!!props.book?.tagline && (
+                  {!!book.tagline && (
                     <h2 className="text-lg font-light leading-tight tracking-wider text-center text-gray-200">
-                      {props.book.tagline}
+                      {book.tagline}
                     </h2>
                   )}
                 </div>
               )}
-              {!!props.book?.genres?.length && (
+              {!!book.genres.length && (
                 <div className="flex justify-center max-w-5xl gap-4 mx-auto">
-                  {props.book.genres.map((genre: any) =>
-                    !!genre?.name && !!genre?._id ? (
+                  {book.genres.map((genre: any) =>
+                    !!genre.name ? (
                       <Link
                         key={genre._id}
                         href="/genre/[id]"
@@ -77,34 +98,30 @@ export default function BookIdPage(props: {
               )}
             </div>
           </div>
-          {(!!props.book?.description ||
-            !!props.book?.buyLinks?.length ||
-            !!props.book?.recommendations?.length ||
-            (!!props.book?.series?.length && !!props.book?.title) ||
-            (!!props.book?.universes?.length && !!props.book?.title)) && (
+          {(!!book.description?.length ||
+            !!book.buyLinks?.length ||
+            !!book.recommendations?.length ||
+            (!!book.series?.length && !!book.title) ||
+            (!!book.universes?.length && !!book.title)) && (
             <div className="px-4">
               <div className="mx-auto space-y-4 max-w-7xl">
-                {!!props.book?.description && (
+                {!!book.description && (
                   <BlockContent
                     renderContainerOnSingleChild
-                    blocks={props.book.description}
+                    blocks={book.description}
                     className="prose max-w-none"
                   />
                 )}
-                {!!props.book?.universes?.length &&
-                  !!props.book?.title &&
-                  props.book.universes.map((universe: any) =>
-                    !!props.book?.title &&
-                    !!universe?._id &&
-                    !!universe?.name ? (
+                {!!book.universes.length &&
+                  !!book.title &&
+                  book.universes.map((universe: any) =>
+                    !!book.title && !!universe.name ? (
                       <ParentLinkBar
                         key={universe._id}
                         statement={
                           <>
-                            <span className="font-bold">
-                              {props.book.title}
-                            </span>{" "}
-                            is part of{" "}
+                            <span className="font-bold">{book.title}</span> is
+                            part of{" "}
                             {universe.name.toLowerCase().split(" ")[0] === "the"
                               ? ""
                               : "the"}{" "}
@@ -117,18 +134,16 @@ export default function BookIdPage(props: {
                       />
                     ) : null
                   )}
-                {!!props.book?.series?.length &&
-                  !!props.book?.title &&
-                  props.book.series.map((series: any) =>
-                    !!props.book?.title && !!series?._id && !!series?.name ? (
+                {!!book.series.length &&
+                  !!book.title &&
+                  book.series.map((series: any) =>
+                    !!book.title && !!series.name ? (
                       <ParentLinkBar
                         key={series._id}
                         statement={
                           <>
-                            <span className="font-bold">
-                              {props.book.title}
-                            </span>{" "}
-                            is part of{" "}
+                            <span className="font-bold">{book.title}</span> is
+                            part of{" "}
                             {series.name.toLowerCase().split(" ")[0] === "the"
                               ? ""
                               : "the"}{" "}
@@ -141,67 +156,68 @@ export default function BookIdPage(props: {
                       />
                     ) : null
                   )}
-                {!!props.book?.buyLinks?.length && (
-                  <BuyLinksBar buyLinks={props.book.buyLinks} />
+                {!!book.buyLinks?.length && (
+                  <BuyLinksBar buyLinks={book.buyLinks} />
                 )}
-                {!!props.book?.recommendations?.length && (
-                  <RecommendationsBar
-                    recommendations={props.book.recommendations}
-                  />
+                {!!book.recommendations?.length && (
+                  <RecommendationsBar recommendations={book.recommendations} />
                 )}
               </div>
             </div>
           )}
         </div>
       }
-      footer={<Footer siteConfiguration={props.siteConfiguration} />}
+      footer={
+        <Footer authorName={siteConfiguration.authorName ?? "YOUR NAME"} />
+      }
     />
   );
 }
 
-export const getStaticProps = async ({ params: { id } }) => {
+export const getStaticProps: GetStaticProps<
+  {
+    siteConfiguration: SiteConfiguration;
+    book: Override<
+      Book,
+      {
+        recommendations?: (Book | Series | Universe | Genre)[];
+        genres: Genre[];
+        universes: Universe[];
+        series: Series[];
+      }
+    >;
+  },
+  { id: string }
+> = async ({ params }) => {
+  if (params?.id === undefined) throw new Error("Missing id.");
+
+  if ((await execQuery<unknown[]>(groq`*[_id == "${params.id}"]`)).length === 0)
+    throw new Error("Invalid id.");
+
   return {
     props: {
-      siteConfiguration: (
-        await execQuery(groq`
-          * | [
-            _id == "siteConfiguration"
-          ] | [
-            0
-          ]
-        `)
-      ).result,
-      book: (
-        await execQuery(groq`
-          * | [
-            _id == "${id}"
-          ] | [
-            0
-          ] | {
+      siteConfiguration: await getSiteConfiguration(),
+      book: await execQuery(groq`
+        * [_id == "${params.id}"]
+        | [0]
+        | {
+          ...,
+          cover{
             ...,
-            "cover": cover | {
+            asset->
+          },
+          recommendations[]->{
+            ...,
+            cover{
               ...,
-              "asset": asset->
-            },
-            "recommendations": recommendations[]->{
-              ...,
-              "cover": cover | {
-                ...,
-                "asset": asset->
-              }
-            },
-            "genres": * | [
-              _type == "genre" && ^._id in books[]._ref
-            ],
-            "universes": * | [
-              _type == "universe" && ^._id in books[]._ref
-            ],
-            "series": * | [
-              _type == "series" && ^._id in books[]._ref
-            ]
-          }
-        `)
-      ).result,
+              asset->
+            }
+          },
+          "genres": *[_type == "genre" && ^._id in books[]._ref],
+          "universes": *[_type == "universe" && ^._id in books[]._ref],
+          "series": *[_type == "series" && ^._id in books[]._ref]
+        }
+      `),
     },
     revalidate: 1,
   };
@@ -210,12 +226,8 @@ export const getStaticProps = async ({ params: { id } }) => {
 export const getStaticPaths = async () => {
   return {
     paths: (
-      await execQuery(groq`
-        * | [
-          _type == "book"
-        ] . _id
-      `)
-    ).result.map((_id: string) => ({ params: { id: _id } })),
+      await execQuery<string[]>(groq`*[_type == "book"]._id`)
+    ).map((id: string) => ({ params: { id } })),
     fallback: true,
   };
 };

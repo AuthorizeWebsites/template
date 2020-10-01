@@ -1,23 +1,24 @@
+import { InferGetStaticPropsType } from "next";
 import { useContext, useState } from "react";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { Layout } from "../components/Layout";
 import { ModalContext } from "../contexts/modal";
-import { execQuery, groq } from "../queries";
+import { getSiteConfiguration } from "../lib/sanity";
 
 export default function ContactPage({
   siteConfiguration,
-}: {
-  siteConfiguration: any;
-}) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const { updateModal } = useContext(ModalContext);
-  const [disabled, setDisabled] = useState(false);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [disabled, setDisabled] = useState(false);
 
   return (
     <Layout
-      header={<Header siteConfiguration={siteConfiguration} />}
+      header={
+        <Header authorName={siteConfiguration.authorName ?? "YOUR NAME"} />
+      }
       content={
         <div className="px-4">
           <div className="flex flex-col max-w-2xl p-4 mx-auto my-4 space-y-4 bg-gray-800 rounded-md shadow-xl sm:16 md:my-32">
@@ -82,7 +83,9 @@ export default function ContactPage({
           </div>
         </div>
       }
-      footer={<Footer siteConfiguration={siteConfiguration} />}
+      footer={
+        <Footer authorName={siteConfiguration.authorName ?? "YOUR NAME"} />
+      }
     />
   );
 }
@@ -172,15 +175,7 @@ function SubmissionErrorModal({
 export const getStaticProps = async () => {
   return {
     props: {
-      siteConfiguration: (
-        await execQuery(groq`
-          * | [
-            _id == "siteConfiguration"
-          ] | [
-            0
-          ]
-        `)
-      ).result,
+      siteConfiguration: await getSiteConfiguration(),
     },
     revalidate: 1,
   };

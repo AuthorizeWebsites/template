@@ -1,15 +1,16 @@
 import Link from "next/link";
-import { Image } from "./Image";
+import { Book, Genre, Series, Universe } from "../@types/sanity";
+import { ImageV2 } from "./ImageV2";
 
 // todo : this is a mess
 
 export function RecommendationsBar({
   recommendations,
 }: {
-  recommendations: any[];
+  recommendations: (Book | Series | Universe | Genre)[];
 }) {
   return (
-    <div className="p-8 space-y-4 overflow-hidden bg-gray-900 rounded-md shadow-lg">
+    <div className="p-4 space-y-4 overflow-hidden bg-gray-900 rounded-md shadow-lg sm:p-8">
       <h1 className="text-2xl font-semibold leading-none tracking-wider text-center text-white uppercase sm:text-4xl sm:text-left">
         Recommendations
       </h1>
@@ -25,19 +26,17 @@ export function RecommendationsBar({
                     as={`/book/${recommendation._id}`}
                   >
                     <a className="relative flex-shrink-0 overflow-hidden transition-transform duration-300 ease-in-out transform rounded-md shadow-lg hover:scale-95">
-                      <img
-                        src={recommendation.cover.asset.metadata.lqip}
-                        height={
-                          recommendation.cover.asset.metadata.dimensions.height
-                        }
-                        width={
-                          recommendation.cover.asset.metadata.dimensions.width
-                        }
-                        className="w-auto opacity-0 h-72"
-                      />
-                      <div className="absolute inset-x-0 top-0">
-                        <Image {...recommendation.cover.asset} />
-                      </div>
+                      {!!recommendation.cover?.asset ? (
+                        <div className="h-72">
+                          <ImageV2
+                            metadata={recommendation.cover.asset.metadata}
+                            url={recommendation.cover.asset.url}
+                            independentDimension="height"
+                          />
+                        </div>
+                      ) : (
+                        recommendation.title
+                      )}
                     </a>
                   </Link>
                 );

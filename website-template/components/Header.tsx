@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Transition } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { execQuery, groq } from "../queries";
 
 const navItems: { text: string; href: string; as?: string }[] = [
   {
@@ -112,15 +111,18 @@ function MobileMenu() {
 function SearchBar() {
   const [searchString, setSearchString] = useState("");
 
-  const [mostRecent, setMostRecent] = useState([]);
+  const [mostRecent, setMostRecent] = useState(
+    [] as { _id: string; _type: string; title?: string; name?: string }[]
+  );
 
-  const { data, error } = useSWR(
+  const { data } = useSWR(
     searchString,
     async (s) => await (await fetch(`/api/search?str=${s}`)).json()
   );
 
   useEffect(() => {
-    setMostRecent(data === undefined ? [] : data);
+    if (searchString === "") setMostRecent([]);
+    else if (data !== undefined) setMostRecent(data);
   }, [data]);
 
   return (
@@ -169,24 +171,30 @@ function SearchBar() {
   );
 }
 
-export function Header({ siteConfiguration }: { siteConfiguration: any }) {
+interface HeaderProps {
+  authorName: string;
+}
+
+export function Header({ authorName }: HeaderProps) {
   const router = useRouter();
 
   const [scrollPos, setScrollPos] = useState(0);
 
   useEffect(() => {
-    window.addEventListener("scroll", () => {
+    function scrollHandler() {
       if (window.pageYOffset !== 0) {
         setScrollPos(window.pageYOffset);
-        window.removeEventListener("scroll", this);
+        window.removeEventListener("scroll", scrollHandler);
       }
-    });
+    }
+    window.addEventListener("scroll", scrollHandler);
+    return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
   return (
     <div
       className={`${
-        scrollPos === 0 ? "shadow-none" : "shadow-2xl"
+        scrollPos === 0 ? "shadow-none" : "shadow-lg"
       } p-3 bg-white sm:p-6 transition-all ease-in-out duration-1000`}
     >
       <div className="flex items-center justify-between mx-auto space-x-4 max-w-7xl">
@@ -196,7 +204,7 @@ export function Header({ siteConfiguration }: { siteConfiguration: any }) {
               router?.asPath === "/" ? "text-shadow-teal" : ""
             } text-3xl focus:text-shadow-teal-lg focus:outline-none font-light leading-none tracking-wider text-transparent uppercase transition-all duration-300 ease-in-out hover:text-shadow-teal-lg bg-clip-text bg-gradient-to-tr from-teal-500 to-teal-400`}
           >
-            {siteConfiguration.authorName ?? ""}
+            {authorName ?? "YOUR NAME"}
           </a>
         </Link>
         <SearchBar />

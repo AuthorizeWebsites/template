@@ -1,6 +1,5 @@
 import { AppProps } from "next/app";
 import "../styles/index.css";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { ModalProvider } from "../contexts/modal";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -9,6 +8,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ModalProvider>
         <Component {...pageProps} />
       </ModalProvider>
+      {/* fixes chrom bug : https://bugs.chromium.org/p/chromium/issues/detail?id=332189 */}
       <script> </script>
     </>
   );

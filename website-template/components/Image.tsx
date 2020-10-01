@@ -1,43 +1,44 @@
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
+import {
+  Color,
+  NumberBasicValueType,
+  ObjectType,
+  StringBasicValueType,
+} from "../@types/sanity";
 
 export interface ImageProps {
   alt?: string;
-  lqipOnly?: false;
+  lqipOnly?: boolean;
   lqipText?: string;
   queryParams?: [string, string][];
   breakPointScalar?: number;
   cover?: boolean;
-  metadata: {
-    dimensions: {
-      aspectRatio: number;
-      // height: number;
-      // width: number
+  metadata: ObjectType & {
+    dimensions: ObjectType & {
+      aspectRatio: NumberBasicValueType;
+      height: NumberBasicValueType;
+      width: NumberBasicValueType;
     };
-    // hasAlpha: boolean;
-    // isOpaque: boolean;
-    lqip: string;
-    palette: {
-      [_: string]: {
-        background: string;
-        foreground: string;
-        population: number;
-        title: string;
-      };
+    lqip: StringBasicValueType;
+    palette: ObjectType & {
+      darkMuted: Color;
+      darkVibrant: Color;
+      dominant: Color;
+      lightMuted: Color;
+      lightVibrant: Color;
+      muted: Color;
+      vibrant: Color;
     };
   };
-  // mimeType: string;
-  // originalFilename: string;
-  // path: string;
-  // sha1hash: string;
-  // size: string;
-  // uploadId: string;
   url: string;
 }
 
 const supportedDimensions = [500, 700, 1000, 1400, 1900];
 
-export function Image(props: ImageProps) {
-  const imageRef = useRef(null);
+export default {};
+
+function Image(props: ImageProps) {
+  const imageRef: RefObject<HTMLImageElement> = useRef(null);
   const [showLQIP, setShowLIQP] = useState(true);
 
   useEffect(() => {
@@ -52,7 +53,10 @@ export function Image(props: ImageProps) {
       : ""
   }`;
 
-  const chosenColorPair = Object.entries(props.metadata.palette)
+  const chosenColorPair = (Object.entries(props.metadata.palette) as [
+    string,
+    Color
+  ][])
     .filter(
       ([key]) => !(key.toLowerCase().includes("vibrant") || key === "dominant")
     )
@@ -67,7 +71,7 @@ export function Image(props: ImageProps) {
       }}
     >
       <div
-        className="w-full transform scale-110 border opacity-75"
+        className="w-full transform scale-110 border"
         style={{
           paddingTop: `${100 / props.metadata.dimensions.aspectRatio}%`,
           background: `url(${props.metadata.lqip})`,
@@ -76,16 +80,18 @@ export function Image(props: ImageProps) {
           filter: "blur(10px)",
         }}
       />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <h1
-          className="p-4 text-2xl font-light leading-tight tracking-wider text-center"
-          style={{
-            color: chosenColorPair.foreground,
-          }}
-        >
-          {props.lqipText}
-        </h1>
-      </div>
+      {showLQIP && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h1
+            className="p-4 text-2xl font-light leading-tight tracking-wider text-center"
+            style={{
+              color: chosenColorPair.foreground,
+            }}
+          >
+            {props.lqipText}
+          </h1>
+        </div>
+      )}
       {!props.lqipOnly && (
         <picture className="absolute inset-0 justify-center min-w-full min-h-full transition-all duration-150 ease-in-out transform justify-self-stretch">
           {[...supportedDimensions].reverse().map((dim) => (

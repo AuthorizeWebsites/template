@@ -1,7 +1,10 @@
 import BlockContent from "@sanity/block-content-to-react";
 import Link from "next/link";
+import { Bio as BioType } from "../@types/sanity";
 
-export function Bio({ content }: { content: any[] }) {
+export type BioProps = Pick<Pick<BioType, "content">, "content">;
+
+export function BioView({ content }: BioProps) {
   return (
     <div className="flex flex-col p-8 space-y-4 bg-white border border-gray-100 rounded-md shadow-lg">
       <h1 className="text-4xl font-bold leading-none tracking-wider text-gray-900">

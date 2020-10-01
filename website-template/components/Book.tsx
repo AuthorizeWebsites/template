@@ -1,73 +1,66 @@
 import { Transition } from "@headlessui/react";
 import Link from "next/link";
 import { useContext, useState } from "react";
+import { Book, BuyLinks, Override } from "../@types/sanity";
 import { ModalContext } from "../contexts/modal";
-import { Image, ImageProps } from "./Image";
+import { ImageV2 } from "./ImageV2";
 
-export interface BookProps {
-  notSelected: boolean;
-  genres?: { _id: string; name: string }[];
-  // _createdAt: string;
-  _id?: string;
-  // _rev: string;
-  // _type: string;
-  // _updatedAt: string;
-  buyLinks?: BuyLink[];
-  cover?: {
-    alt?: string;
-    asset: ImageProps;
-  };
-  // description?: any[];
-  // tagline?: string;
-  title?: string;
-}
-
-export function Book(props: BookProps) {
-  const [hovered, setHovered] = useState(false);
+// todo : clean up
+export function BookView({ _id, cover, title, buyLinks }: Book) {
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className={`${
-        props.notSelected ? "opacity-25 pointer-events-none" : "opacity-100"
-      } relative h-full transition-all duration-300 ease-in-out transform sm:pb-5 group hover:z-20`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      className="relative h-full transition-all duration-300 ease-in-out transform sm:pb-5 group hover:z-20"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <Link href="/book/[id]" as={`/book/${props._id}`}>
+      <Link href="/book/[id]" as={`/book/${_id}`}>
         <a className="relative flex flex-col items-center justify-center h-full overflow-hidden transition-all duration-300 ease-in-out bg-gray-700 rounded-md shadow-lg group">
-          <div className="relative w-full h-full p-2 transition-all duration-1000 ease-in-out sm:p-4 group-hover:bg-teal-100">
-            <div
-              className="absolute inset-0 transition-opacity duration-1000 ease-in-out transform scale-110 opacity-0 group-hover:opacity-50"
-              style={{
-                filter: "blur(3px) brightness(200%)",
-                willChange: "transform",
-              }}
-            >
-              <div className="h-full max-h-full overflow-hidden opacity-75">
-                <Image
-                  alt={props.cover?.alt}
-                  lqipText={props.title}
-                  {...props.cover?.asset}
-                />
+          {cover?.asset ? (
+            <div className="relative w-full h-full p-2 transition-all duration-1000 ease-in-out sm:p-4 group-hover:bg-teal-100">
+              <Transition
+                show={isHovered}
+                enter="transition-opacity duration-1000 ease-out"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="transition-opacity duration-1000 ease-in"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+                className="absolute inset-0 transform"
+                style={{
+                  filter: "blur(3px) brightness(200%)",
+                  willChange: "transform",
+                }}
+              >
+                <div className="h-full max-h-full overflow-hidden opacity-75">
+                  <ImageV2
+                    metadata={cover.asset.metadata}
+                    url={cover.asset.url}
+                    independentDimension="width"
+                  />
+                </div>
+              </Transition>
+              <div
+                style={{ willChange: "transform" }}
+                className="transition-all duration-300 ease-in-out delay-150 transform rounded-md shadow-lg group-hover:scale-95 sm:group-hover:scale-90"
+              >
+                <div className="w-full overflow-hidden transition-all duration-300 ease-in-out delay-150 rounded-md shadow-lg">
+                  <ImageV2
+                    metadata={cover.asset.metadata}
+                    url={cover.asset.url}
+                    independentDimension="width"
+                  />
+                </div>
               </div>
             </div>
-            <div
-              style={{ willChange: "transform" }}
-              className="transition-all duration-300 ease-in-out delay-150 transform rounded-md shadow-lg group-hover:scale-95 sm:group-hover:scale-90"
-            >
-              <div className="w-full overflow-hidden transition-all duration-300 ease-in-out delay-150 rounded-md shadow-lg">
-                <Image
-                  alt={props.cover?.alt}
-                  lqipText={props.title}
-                  {...props.cover?.asset}
-                />
-              </div>
-            </div>
-          </div>
+          ) : (
+            <p className="text-center">{title}</p>
+          )}
         </a>
       </Link>
       <Transition
-        show={hovered}
+        show={isHovered}
         enter="delay-200 transition-all ease-out duration-150 transform"
         enterFrom="h-0 opacity-0"
         enterTo="h-10 opacity-100"
@@ -76,24 +69,13 @@ export function Book(props: BookProps) {
         leaveTo="h-0 opacity-0"
         className="absolute bottom-0 z-20 items-end justify-center hidden w-full sm:flex"
       >
-        <BuyNowButton buyLinks={props.buyLinks} />
+        <BuyNowButton buyLinks={buyLinks ?? []} />
       </Transition>
     </div>
   );
 }
 
-interface BuyLink {
-  _key?: string;
-  _type?: string;
-  link?: string;
-  name?: string;
-}
-
-interface BuyNowButtonProps {
-  buyLinks: BuyLink[];
-}
-
-function BuyNowButton({ buyLinks }: BuyNowButtonProps) {
+function BuyNowButton({ buyLinks }: { buyLinks: BuyLinks }) {
   const { updateModal } = useContext(ModalContext);
 
   return (
@@ -109,7 +91,7 @@ function BuyNowButton({ buyLinks }: BuyNowButtonProps) {
   );
 }
 
-function BuyNowModal({ buyLinks }: BuyNowButtonProps) {
+function BuyNowModal({ buyLinks }: { buyLinks: BuyLinks }) {
   const { updateModal } = useContext(ModalContext);
 
   return (
