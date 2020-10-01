@@ -134,6 +134,8 @@ export const getStaticProps: GetStaticProps<
   },
   { id: string }
 > = async ({ params }) => {
+  console.log("IN GENRE getStaticProps");
+
   if (params?.id === undefined) throw new Error("Missing id.");
 
   if ((await execQuery<unknown[]>(groq`*[_id == "${params.id}"]`)).length === 0)
@@ -205,6 +207,13 @@ export const getStaticProps: GetStaticProps<
 };
 
 export const getStaticPaths = async () => {
+  console.log("IN GENRE getStaticPaths");
+
+  console.log(
+    "query result",
+    await execQuery<string[]>(groq`*[_type == "genre"]._id`)
+  );
+
   return {
     paths: (
       await execQuery<string[]>(groq`*[_type == "genre"]._id`)
