@@ -191,10 +191,18 @@ export const getStaticPaths = async () => {
     await execQuery<string[]>(groq`*[_type == "series"]._id`)
   );
 
-  return {
-    paths: (
-      await execQuery<string[]>(groq`*[_type == "series"]._id`)
-    ).map((id: string) => ({ params: { id } })),
-    fallback: true,
-  };
+  try {
+    return {
+      paths: (
+        await execQuery<string[]>(groq`*[_type == "series"]._id`)
+      ).map((id: string) => ({ params: { id } })),
+      fallback: true,
+    };
+  } catch (err) {
+    console.error(err);
+    return {
+      paths: [],
+      fallback: true,
+    };
+  }
 };
