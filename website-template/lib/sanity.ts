@@ -8,6 +8,10 @@ export async function execQuery<T>(query: string): Promise<T> {
       process.env.SANITY_DATASET_NAME
     }?query=${encodeURIComponent(query)}`
   )
+    .then((r) => {
+      console.log(r);
+      return r;
+    })
     .then((r) => r.json())
     .then((j) => j.result)
     .then((result) => {
