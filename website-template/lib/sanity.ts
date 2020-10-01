@@ -13,7 +13,8 @@ export async function execQuery<T>(query: string): Promise<T> {
     .then((result) => {
       console.info(result);
       return result;
-    });
+    })
+    .catch((err) => console.error(err));
 
   //   await (
 
