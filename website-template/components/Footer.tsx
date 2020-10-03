@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface FooterProps {
   authorName: string;
 }
@@ -7,14 +9,13 @@ export function Footer({ authorName }: FooterProps) {
     <div className="flex items-center justify-center pt-6 pb-2">
       <p className="text-sm text-gray-600">
         Books by{" "}
-        <a
-          href="https://stevenpressfield.com"
-          target="_blank"
-          rel="noopener"
-          className="text-transparent bg-gradient-to-tr bg-clip-text from-teal-500 to-teal-400 focus:outline-none focus:text-shadow-teal"
-        >
-          {authorName}
-        </a>{" "}
+        {
+          <Link href="/about">
+            <a className="text-transparent bg-gradient-to-tr bg-clip-text from-teal-500 to-teal-400 focus:outline-none focus:text-shadow-teal">
+              {authorName}
+            </a>
+          </Link>
+        }{" "}
         &middot; Site by{" "}
         <a
           href="https://authorizewebsites.com"

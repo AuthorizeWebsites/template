@@ -5,7 +5,8 @@ type DocumentNames =
   | "series"
   | "universe"
   | "genre"
-  | "siteConfiguration";
+  | "siteConfiguration"
+  | "post";
 
 export type StringBasicValueType = string;
 
@@ -244,5 +245,16 @@ export type SiteConfiguration = DocumentType & {
 export const isSiteConfiguration = (
   value: DocumentType
 ): value is SiteConfiguration => value._type === "siteConfiguration";
+
+export type Post = DocumentType & {
+  _type: "post";
+  coverImage?: Image;
+  title?: StringBasicValueType;
+  body?: RichText;
+  publicationDate?: DateBasicValueType;
+};
+
+export const isPost = (value: DocumentType): value is Post =>
+  value._type === "post";
 
 export type Override<T1, T2> = Omit<T1, keyof T2> & T2;

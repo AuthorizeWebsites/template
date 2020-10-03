@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Transition } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 
 const navItems: { text: string; href: string; as?: string }[] = [
@@ -12,6 +12,10 @@ const navItems: { text: string; href: string; as?: string }[] = [
   {
     text: "Books",
     href: "/books",
+  },
+  {
+    text: "Blog",
+    href: "/blog",
   },
   {
     text: "Contact",
@@ -175,21 +179,30 @@ interface HeaderProps {
   authorName: string;
 }
 
+function useInterval(callback: () => void, delay: number) {
+  const savedCallback = useRef(null);
+
+  useEffect(() => {
+    (savedCallback as any).current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    function tick() {
+      (savedCallback as any).current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
 export function Header({ authorName }: HeaderProps) {
   const router = useRouter();
 
   const [scrollPos, setScrollPos] = useState(0);
 
-  useEffect(() => {
-    function scrollHandler() {
-      if (window.pageYOffset !== 0) {
-        setScrollPos(window.pageYOffset);
-        window.removeEventListener("scroll", scrollHandler);
-      }
-    }
-    window.addEventListener("scroll", scrollHandler);
-    return () => window.removeEventListener("scroll", scrollHandler);
-  }, []);
+  useInterval(() => setScrollPos(window.pageYOffset), 100);
 
   return (
     <div

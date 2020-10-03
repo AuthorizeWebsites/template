@@ -44,53 +44,51 @@ export function ImageV2({
   independentDimension = "width",
   url,
 }: ImageV2Props) {
-  let dimensionClasses: string;
-
-  switch (independentDimension) {
-    case "height":
-      dimensionClasses = "h-full w-auto";
-      break;
-    case "width":
-      dimensionClasses = "w-full h-auto";
-      break;
-    case "cover":
-      dimensionClasses = "min-w-full min-h-full";
-      break;
-  }
-
   const dimensionlessUrl = `${url}?auto=format`;
 
   return (
     <div
-      className={`${dimensionClasses} max-h-full max-w-full overflow-hidden flex items-center justify-center relative`}
+      className={`${
+        independentDimension === "height"
+          ? "h-full w-auto"
+          : independentDimension === "width"
+          ? "h-auto w-full"
+          : independentDimension === "cover"
+          ? "h-full w-full"
+          : ""
+      } max-h-full max-w-full overflow-hidden flex-col flex items-center justify-center relative`}
+      style={{
+        backgroundImage: `url(\"${metadata.lqip}\")`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
-      <img
-        src={metadata.lqip}
-        height={metadata.dimensions.height}
-        width={metadata.dimensions.width}
-        className={`${dimensionClasses} transform scale-110`}
-        style={{
-          filter: "blur(16px)",
-        }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <picture className={`${dimensionClasses}`}>
-          {[...supportedIntrinsicWidths].reverse().map((dim) => (
-            <source
-              key={dim}
-              media={`(min-width: ${dim}px)`}
-              srcSet={`${dimensionlessUrl}&w=${dim}&q=75`}
-            />
-          ))}
-          <img
-            src={`${dimensionlessUrl}&w=${supportedIntrinsicWidths[0]}`}
-            loading="lazy"
-            height={metadata.dimensions.height}
-            width={metadata.dimensions.width}
-            className={`${dimensionClasses}`}
+      <picture className="flex min-w-full min-h-full">
+        {[...supportedIntrinsicWidths].reverse().map((dim) => (
+          <source
+            key={dim}
+            media={`(min-width: ${dim}px)`}
+            srcSet={`${dimensionlessUrl}&w=${dim}&q=75`}
           />
-        </picture>
-      </div>
+        ))}
+        <img
+          src={`${dimensionlessUrl}&w=${supportedIntrinsicWidths[0]}`}
+          loading="lazy"
+          height={metadata.dimensions.height}
+          width={metadata.dimensions.width}
+          className={`${
+            independentDimension === "height"
+              ? "h-full w-auto"
+              : independentDimension === "width"
+              ? "h-auto w-full"
+              : independentDimension === "cover"
+              ? "h-full w-full object-cover"
+              : ""
+          }`}
+        />
+      </picture>
+      {/* </div> */}
     </div>
   );
 }
