@@ -1,5 +1,6 @@
 import BlockContent from "@sanity/block-content-to-react";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 import { Post, SiteConfiguration } from "../../@types/sanity";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
@@ -11,6 +12,15 @@ export default function BlogByIdPage({
   siteConfiguration,
   post,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+
+  if (router.isFallback)
+    return (
+      <div className="flex items-center justify-center w-screen h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+
   return (
     <Layout
       header={

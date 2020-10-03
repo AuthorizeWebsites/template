@@ -19,17 +19,17 @@ export async function execQuery<T>(query: string): Promise<T> {
   //   )
   // );
 
-  console.log(
-    await (
-      await fetch(
-        `https://${
-          process.env.SANITY_PROJECT_ID
-        }.apicdn.sanity.io/v1/data/query/${
-          process.env.SANITY_DATASET_NAME
-        }?query=${encodeURIComponent(query)}`
-      )
-    ).json()
-  );
+  // console.log(
+  //   await (
+  //     await fetch(
+  //       `https://${
+  //         process.env.SANITY_PROJECT_ID
+  //       }.apicdn.sanity.io/v1/data/query/${
+  //         process.env.SANITY_DATASET_NAME
+  //       }?query=${encodeURIComponent(query)}`
+  //     )
+  //   ).json()
+  // );
 
   return (
     await (
