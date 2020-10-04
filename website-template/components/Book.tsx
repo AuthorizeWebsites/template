@@ -7,70 +7,65 @@ import { ImageV2 } from "./ImageV2";
 
 // todo : clean up
 export function BookView({ _id, cover, title, buyLinks }: Book) {
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div
-      className="relative h-full transition-all duration-300 ease-in-out transform sm:pb-5 group hover:z-20"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <Link href="/book/[id]" as={`/book/${_id}`}>
-        <a className="relative flex flex-col items-center justify-center h-full overflow-hidden transition-all duration-300 ease-in-out bg-gray-700 rounded-md shadow-lg group">
-          {cover?.asset ? (
-            <div className="relative w-full h-full p-2 transition-all duration-1000 ease-in-out sm:p-4 group-hover:bg-teal-100">
-              <Transition
-                show={isHovered}
-                enter="transition-opacity duration-1000 ease-out"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="transition-opacity duration-1000 ease-in"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-                className="absolute inset-0 transform"
-                style={{
-                  filter: "blur(3px) brightness(200%)",
-                  willChange: "transform",
-                }}
-              >
-                <div className="h-full max-h-full overflow-hidden opacity-75">
-                  <ImageV2
-                    metadata={cover.asset.metadata}
-                    url={cover.asset.url}
-                    independentDimension="width"
-                  />
+    <div className="w-full h-full pb-5">
+      <div
+        className="relative h-full transition-all duration-500 ease-in-out transform group hover:z-20"
+        // onMouseEnter={() => setIsHovered(true)}
+        // onMouseLeave={() => setIsHovered(false)}
+      >
+        <Link href="/book/[id]" as={`/book/${_id}`}>
+          <a className="relative flex flex-col items-center justify-center h-full overflow-hidden transition-all duration-300 ease-in-out bg-gray-700 rounded-md shadow-lg group">
+            {cover?.asset ? (
+              <div className="relative w-full h-full p-2 sm:p-4">
+                <div className="absolute inset-0 w-full h-full">
+                  <div
+                    style={{ willChange: "transform, opacity" }}
+                    className="w-full h-full transition-all duration-500 ease-in-out transform scale-90 opacity-0 group-hover:scale-110 group-hover:opacity-100"
+                  >
+                    <div
+                      className="w-full h-full bg-blue-200"
+                      style={{
+                        filter: "blur(2px)",
+                      }}
+                    >
+                      <div className="w-full h-full opacity-50">
+                        <ImageV2
+                          metadata={cover.asset.metadata}
+                          url={cover.asset.url}
+                          independentDimension="cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </Transition>
-              <div
-                style={{ willChange: "transform" }}
-                className="transition-all duration-300 ease-in-out delay-150 transform rounded-md shadow-lg group-hover:scale-95 sm:group-hover:scale-90"
-              >
-                <div className="w-full overflow-hidden transition-all duration-300 ease-in-out delay-150 rounded-md shadow-lg">
-                  <ImageV2
-                    metadata={cover.asset.metadata}
-                    url={cover.asset.url}
-                    independentDimension="width"
-                  />
+                <div
+                  style={{ willChange: "transform" }}
+                  className="transition-all duration-500 ease-in-out transform rounded-md shadow-lg group-hover:scale-95 sm:group-hover:scale-90"
+                >
+                  <div className="w-full overflow-hidden transition-all duration-300 ease-in-out delay-150 rounded-md shadow-lg">
+                    <ImageV2
+                      metadata={cover.asset.metadata}
+                      url={cover.asset.url}
+                      independentDimension="width"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <p className="text-center">{title}</p>
-          )}
-        </a>
-      </Link>
-      <Transition
-        show={isHovered}
-        enter="delay-200 transition-all ease-out duration-150 transform"
-        enterFrom="h-0 opacity-0"
-        enterTo="h-10 opacity-100"
-        leave="transition-all ease-in duration-150"
-        leaveFrom="h-10 opacity-100"
-        leaveTo="h-0 opacity-0"
-        className="absolute bottom-0 z-20 items-end justify-center hidden w-full sm:flex"
-      >
-        <BuyNowButton buyLinks={buyLinks ?? []} />
-      </Transition>
+            ) : (
+              <p className="text-center">{title}</p>
+            )}
+          </a>
+        </Link>
+        <div
+          style={{ willChange: "transform, opacity" }}
+          className="absolute inset-x-0 bottom-0 flex items-center justify-center transition-all duration-500 ease-in-out transform scale-50 translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:scale-100"
+        >
+          <BuyNowButton buyLinks={buyLinks ?? []} />
+        </div>
+      </div>
     </div>
   );
 }

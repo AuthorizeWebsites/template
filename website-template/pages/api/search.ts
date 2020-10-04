@@ -8,7 +8,7 @@ export default async function Handler(
   res.json(
     await execQuery<any>(groq`
         * | [
-            _type in ["book", "series", "universe", "genre"]
+            _type in ["book", "series", "universe", "genre", "post"]
         ] | [
             [name, title, tagline] match [${(req.query.str as string)
               ?.split(" ")

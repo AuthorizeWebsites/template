@@ -64,7 +64,17 @@ export function ImageV2({
         backgroundPosition: "center",
       }}
     >
-      <picture className="flex min-w-full min-h-full">
+      <picture
+        className={`${
+          independentDimension === "height"
+            ? "h-full w-auto"
+            : independentDimension === "width"
+            ? "h-auto w-full"
+            : independentDimension === "cover"
+            ? "h-full w-full object-cover"
+            : ""
+        } flex`}
+      >
         {[...supportedIntrinsicWidths].reverse().map((dim) => (
           <source
             key={dim}

@@ -14,6 +14,7 @@ import recommendations from "./helpers/recommendations";
 import siteConfiguration from "./documents/siteConfiguration";
 import about from "./documents/about";
 import home from "./documents/home";
+import post from "./documents/post";
 
 export const localTypes = [
   //author,
@@ -31,6 +32,7 @@ export const localTypes = [
   siteConfiguration,
   about,
   home,
+  post,
   //recommendation,
   //seo,
   //buyLinks,
@@ -61,7 +63,8 @@ type TypeTuple2TypeNameTuple<TupleT> = {
       | "recommendation"
       | "siteConfiguration"
       | "about"
-      | "home";
+      | "home"
+      | "post";
   }
     ? TupleT[IndexT]["name"]
     : never;

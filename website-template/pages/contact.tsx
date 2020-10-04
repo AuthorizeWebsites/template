@@ -1,94 +1,85 @@
 import { InferGetStaticPropsType } from "next";
 import { useContext, useState } from "react";
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
-import { Layout } from "../components/Layout";
+import {
+  withDefaultLayout,
+  withDefaultLayoutStaticProps,
+} from "../components/Layout";
 import { ModalContext } from "../contexts/modal";
-import { getSiteConfiguration } from "../lib/sanity";
+import { withDefaultRevalidate } from "../lib/utils";
 
-export default function ContactPage({
-  siteConfiguration,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { updateModal } = useContext(ModalContext);
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [disabled, setDisabled] = useState(false);
+export default withDefaultLayout(
+  function ContactPage({}: InferGetStaticPropsType<typeof getStaticProps>) {
+    const { updateModal } = useContext(ModalContext);
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
+    const [disabled, setDisabled] = useState(false);
 
-  return (
-    <Layout
-      header={
-        <Header authorName={siteConfiguration.authorName ?? "YOUR NAME"} />
-      }
-      content={
-        <div className="px-4">
-          <div className="flex flex-col max-w-2xl p-4 mx-auto my-4 space-y-4 bg-gray-800 rounded-md shadow-xl sm:16 md:my-32">
-            <h1 className="text-4xl font-semibold leading-tight tracking-wider text-white">
-              Contact Me
-            </h1>
-            <input
-              className="form-input"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email"
-            />
-            <textarea
-              className="form-textarea h-80"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Your message"
-            />
-            <button
-              disabled={disabled}
-              onClick={() => {
-                if (!email.includes("@")) {
-                  updateModal(
-                    <SubmissionErrorModal content="A valid email is required." />
-                  );
-                } else if (message === "") {
-                  updateModal(
-                    <SubmissionErrorModal content="A message is required." />
-                  );
-                } else {
-                  setDisabled(true);
-                  fetch("/api/send-email", {
-                    method: "POST",
-                    headers: {
-                      ["Content-Type"]: "application/json",
-                    },
-                    body: JSON.stringify({
-                      formName: "contact",
-                      email,
-                      message,
-                    }),
-                  }).then(async (r) => {
-                    if (r.status !== 200) {
-                      updateModal(
-                        <SubmissionErrorModal
-                          onExit={() => setDisabled(false)}
-                          content="Something went wrong. Please try again in a moment."
-                        />
-                      );
-                    } else
-                      updateModal(
-                        <SuccessModal onExit={() => setDisabled(false)} />
-                      );
-                  });
-                }
-              }}
-              className="px-4 py-2 text-2xl font-semibold text-white transition-all duration-150 ease-in-out rounded-md focus:outline-none bg-gradient-to-tr from-teal-500 to-teal-400 hover:shadow-lg focus:from-teal-600 focus:to-teal-500 hover:from-teal-600 hover:to-teal-500"
-            >
-              Send
-            </button>
-          </div>
+    return (
+      <div className="px-4">
+        <div className="flex flex-col max-w-2xl p-4 mx-auto my-4 space-y-4 bg-gray-800 rounded-md shadow-xl sm:16 md:my-32">
+          <h1 className="text-4xl font-semibold leading-tight tracking-wider text-white">
+            Contact Me
+          </h1>
+          <input
+            className="form-input"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Your email"
+          />
+          <textarea
+            className="form-textarea h-80"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Your message"
+          />
+          <button
+            disabled={disabled}
+            onClick={() => {
+              if (!email.includes("@")) {
+                updateModal(
+                  <SubmissionErrorModal content="A valid email is required." />
+                );
+              } else if (message === "") {
+                updateModal(
+                  <SubmissionErrorModal content="A message is required." />
+                );
+              } else {
+                setDisabled(true);
+                fetch("/api/send-email", {
+                  method: "POST",
+                  headers: {
+                    ["Content-Type"]: "application/json",
+                  },
+                  body: JSON.stringify({
+                    formName: "contact",
+                    email,
+                    message,
+                  }),
+                }).then(async (r) => {
+                  if (r.status !== 200) {
+                    updateModal(
+                      <SubmissionErrorModal
+                        onExit={() => setDisabled(false)}
+                        content="Something went wrong. Please try again in a moment."
+                      />
+                    );
+                  } else
+                    updateModal(
+                      <SuccessModal onExit={() => setDisabled(false)} />
+                    );
+                });
+              }
+            }}
+            className="px-4 py-2 text-2xl font-semibold text-white transition-all duration-150 ease-in-out rounded-md focus:outline-none bg-gradient-to-tr from-teal-500 to-teal-400 hover:shadow-lg focus:from-teal-600 focus:to-teal-500 hover:from-teal-600 hover:to-teal-500"
+          >
+            Send
+          </button>
         </div>
-      }
-      footer={
-        <Footer authorName={siteConfiguration.authorName ?? "YOUR NAME"} />
-      }
-    />
-  );
-}
+      </div>
+    );
+  }
+);
 
 function SuccessModal({ onExit }: { onExit?: () => void }) {
   const { updateModal } = useContext(ModalContext);
@@ -172,11 +163,8 @@ function SubmissionErrorModal({
   );
 }
 
-export const getStaticProps = async () => {
-  return {
-    props: {
-      siteConfiguration: await getSiteConfiguration(),
-    },
-    revalidate: 1,
-  };
-};
+export const getStaticProps = withDefaultLayoutStaticProps(
+  withDefaultRevalidate(async () => ({
+    props: {},
+  }))
+);
