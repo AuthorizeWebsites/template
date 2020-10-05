@@ -89,7 +89,7 @@ export type Image = ObjectType & {
 export const isImage = (value: ObjectType): value is Image =>
   value._type === "customImage";
 
-export type RichText = ArrayType & any[]; // todo
+export type RichText = any[]; // todo
 
 export const isRichText = (value: ArrayType): value is RichText =>
   Array.isArray(value);
@@ -113,11 +113,11 @@ export const isBuyLink = (value: ObjectType): value is BuyLink =>
 
 export type BuyLinks = BuyLink[];
 
-export const isBuyLinks = (value: ArrayType): value is BuyLinks =>
-  Array.isArray(value) &&
-  value.reduce((acc: boolean, elem) => {
-    return acc && typeof elem === "object" && elem._type === "buyLink";
-  }, true);
+// export const isBuyLinks = (value: ArrayType): value is BuyLinks =>
+//   Array.isArray(value) &&
+//   value.reduce((acc: boolean, elem) => {
+//     return acc && typeof elem === "object" && elem._type === "buyLink";
+//   }, true);
 
 export type Recommendation = ReferenceType & {
   _type: "recommendation";
@@ -135,15 +135,15 @@ export type Recommendations = (
   | Genre
 )[];
 
-export const isRecommendations = (value: ArrayType): value is Recommendations =>
-  Array.isArray(value) &&
-  value.reduce((acc: boolean, elem) => {
-    return (
-      acc &&
-      typeof elem === "object" &&
-      ["book", "series", "universe", "genre"].includes(elem._type)
-    );
-  }, true);
+// export const isRecommendations = (value: ArrayType): value is Recommendations =>
+//   Array.isArray(value) &&
+//   value.reduce((acc: boolean, elem) => {
+//     return (
+//       acc &&
+//       typeof elem === "object" &&
+//       ["book", "series", "universe", "genre"].includes(elem._type)
+//     );
+//   }, true);
 
 export type Book = DocumentType & {
   _type: "book";

@@ -3,7 +3,7 @@ import {
   withDefaultLayoutStaticProps,
 } from "../components/Layout";
 import { BookCarousel } from "../components/BookCarousel";
-import { BioView } from "../components/Bio";
+import { BioView } from "../components/BioView.gen";
 import { NewsletterSignUp as NewsletterSignUpComp } from "../components/NewsletterSignUp";
 import { execQuery, groq } from "../lib/sanity";
 import { InferGetStaticPropsType } from "next";

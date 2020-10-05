@@ -1,0 +1,40 @@
+gentypeconfig = -bs-gentype /Users/ahb/authorize/code/template-rescript-refactor/website-template/node_modules/gentype/gentype.exe
+g_pkg_flg = -bs-package-name website-template -bs-ns WebsiteTemplate
+src_root_dir = /Users/ahb/authorize/code/template-rescript-refactor/website-template
+bsc = /Users/ahb/authorize/code/template-rescript-refactor/website-template/node_modules/bs-platform/darwin/bsc.exe
+bsdep = /Users/ahb/authorize/code/template-rescript-refactor/website-template/node_modules/bs-platform/darwin/bsb_helper.exe
+warnings = 
+bsc_flags = -bs-super-errors
+ppx_flags = -ppx 'tailwind-ppx -path ./styles/compiled.css'
+g_dpkg_incls = 
+g_ns = -bs-ns WebsiteTemplate
+g_lib_incls = -I . -I components/bindings -I components -I pages/series -I pages/post -I pages/test -I pages/genre -I pages/book -I pages/api -I pages/universe -I pages -I contexts -I lib/bs/components/bindings -I lib/bs/components -I lib/bs -I lib -I /Users/ahb/authorize/code/template-rescript-refactor/website-template/node_modules/reason-react/lib/ocaml
+rule build_ast_from_re
+  command = $bsc  $warnings -bs-jsx 3 $ppx_flags $bsc_flags -o $out -bs-syntax-only -bs-binary-ast $in
+  description = [34mBuilding[39m [2m${out}[22m
+build  components/BioView.resast : build_ast_from_re $src_root_dir/components/BioView.res
+rule mk_deps
+  command = $bsdep -hash 0d1ab10bc44975bce544f213488c4bbc $g_ns $in
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build  components/BioView.d : mk_deps components/BioView.resast
+rule ml_cmj_cmi
+  command = $bsc $g_pkg_flg -bs-suffix $g_lib_incls $warnings $bsc_flags $gentypeconfig -o $out $in
+  dyndep = $in_e.d
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build  components/BioView-WebsiteTemplate.cmj |  components/BioView-WebsiteTemplate.cmi $src_root_dir/components/BioView.bs.js : ml_cmj_cmi components/BioView.resast ||  components/BioView.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output es6:components
+build  components/bindings/Next.resast : build_ast_from_re $src_root_dir/components/bindings/Next.res
+build  components/bindings/Next.d : mk_deps components/bindings/Next.resast
+build  components/bindings/Next-WebsiteTemplate.cmj |  components/bindings/Next-WebsiteTemplate.cmi $src_root_dir/components/bindings/Next.bs.js : ml_cmj_cmi components/bindings/Next.resast ||  components/bindings/Next.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output es6:components/bindings
+build  components/bindings/BlockContentToReact.resast : build_ast_from_re $src_root_dir/components/bindings/BlockContentToReact.res
+build  components/bindings/BlockContentToReact.d : mk_deps components/bindings/BlockContentToReact.resast
+build  components/bindings/BlockContentToReact-WebsiteTemplate.cmj |  components/bindings/BlockContentToReact-WebsiteTemplate.cmi $src_root_dir/components/bindings/BlockContentToReact.bs.js : ml_cmj_cmi components/bindings/BlockContentToReact.resast ||  components/bindings/BlockContentToReact.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output es6:components/bindings
+rule build_package
+  command = $bsc -w -49 -color always -no-alias-deps  $in
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build  WebsiteTemplate.cmi : build_package WebsiteTemplate.mlmap
